@@ -16,6 +16,7 @@
         .chalk-text h2 { color: #63b3ed; border-bottom: 1px dashed #4a5568; margin-bottom: 10px; }
         .chalk-text ul { list-style-type: square; padding-left: 20px; }
     </style>
+    <link rel="icon" href="data:,">
 </head>
 <body class="bg-gray-200 min-h-screen">
     <div class="max-w-6xl mx-auto py-10 px-4">
@@ -55,6 +56,12 @@
 
         ws.onopen = () => {
             console.log("✅ Connected to Aura Backend");
+            // Add this inside ws.onopen to keep the connection alive every 20 seconds
+            setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: "ping" }));
+                }
+            }, 20000);
         };
 
         ws.onerror = (error) => {
@@ -112,13 +119,13 @@
             const input = document.getElementById('userInput').value;
             // CHECK: Only send if the socket is actually open
             if (input.trim() && ws.readyState === WebSocket.OPEN) {
-                ws.send(json.stringify({ message: input }));
+                ws.send(JSON.stringify({ message: input }));
                 document.getElementById('userInput').value = "";
             } else {
                 console.error("Socket is closed. Current state:", ws.readyState);
             }
         }
-        
+
     </script>
 </body>
 </html>
