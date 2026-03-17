@@ -5,11 +5,23 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from groq import AsyncGroq
 import uvicorn
-from dotenv import load_dotenv
 import os
+from fastapi.middleware.cors import CORSMiddleware
+
+from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
+
+# ADD THIS: Allows your frontend to talk to your backend safely
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Initialize Groq client
 client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
 

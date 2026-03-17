@@ -44,7 +44,28 @@
     </div>
 
     <script>
-        const ws = new WebSocket(`ws://${window.location.host}/ws`);
+
+        // 1. DYNAMIC PROTOCOL DETECTION
+        // Locally: ws://localhost:8000
+        // On Render: wss://your-app.onrender.com
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/ws`;
+
+        const ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+            console.log("✅ Connected to Aura Backend");
+        };
+
+        ws.onerror = (error) => {
+            console.error("❌ WebSocket Error:", error);
+            alert("Connection failed. Render might be waking up—please refresh in 30 seconds.");
+        };
+
+        ws.onclose = () => {
+            console.log("⚠️ Connection closed. Refresh to reconnect.");
+        };
+
         const board = document.getElementById('board');
         
         // Handling AI Messages
@@ -89,11 +110,15 @@
 
         function send() {
             const input = document.getElementById('userInput').value;
-            if (input.trim()) {
-                ws.send(JSON.stringify({ message: input }));
+            // CHECK: Only send if the socket is actually open
+            if (input.trim() && ws.readyState === WebSocket.OPEN) {
+                ws.send(json.stringify({ message: input }));
                 document.getElementById('userInput').value = "";
+            } else {
+                console.error("Socket is closed. Current state:", ws.readyState);
             }
         }
+        
     </script>
 </body>
 </html>
