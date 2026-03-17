@@ -107,6 +107,14 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as e:
         print(f"Error: {e}")
 
+
 if __name__ == "__main__":
+    # Get the port from the environment (Render sets this)
+    # Default to 8000 if running locally
     port = int(os.environ.get("PORT", 8000))
+    
+    # Only open browser if NOT running on a server (local dev)
+    if not os.environ.get("RENDER"):
+        webbrowser.open(f"http://127.0.0.1:{port}")
+        
     uvicorn.run(app, host="0.0.0.0", port=port)
