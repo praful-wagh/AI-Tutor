@@ -50,6 +50,11 @@ SPOKEN NARRATIVE (voice_script):
 
 STRICT LOGIC:
 The `voice_script` is the 'Quick Guide'; the `whiteboard_text` is the 'Deep Record'. Do not read the board. Explain the intuition behind what is written as fast as possible.
+
+CRITICAL RULE:
+Even for greetings (like 'Hi' or 'Hello'), you MUST use the 'render_whiteboard_and_speak' function. 
+Put a friendly welcome message on the whiteboard and say hello in the voice script. 
+Never respond with plain text.
 """
 
 
